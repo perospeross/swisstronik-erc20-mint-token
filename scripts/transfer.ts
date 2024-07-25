@@ -3,6 +3,8 @@ import { encryptDataField } from '@swisstronik/utils'
 import { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/src/signers'
 import { HttpNetworkConfig } from 'hardhat/types'
 import deployedAddress from '../utils/deployed-address'
+import * as fs from 'fs'
+import * as path from 'path'
 
 const sendShieldedTransaction = async (
   signer: HardhatEthersSigner,
@@ -43,7 +45,11 @@ async function main() {
   )
   await setMessageTx.wait()
 
-  console.log('Transaction Receipt: ', setMessageTx)
+  console.log('Transaction Receipt: ', setMessageTx.hash)
+  const filePath = path.join(__dirname, '../utils/tx-hash.txt')
+  fs.writeFileSync(filePath, `Tx hash : https://explorer-evm.testnet.swisstronik.com/tx/${setMessageTx.hash}\n`, {
+    flag: 'a',
+  })
 }
 
 main().catch((error) => {
